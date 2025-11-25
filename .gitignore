@@ -1,0 +1,55 @@
+############################
+# Build artifacts
+############################
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+
+# Final binary
+project5loader
+
+# Build directories
+build/
+bin/
+dist/
+tmp/
+
+############################
+# Editor / IDE
+############################
+# VS Code internal files
+.vscode/
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/c_cpp_properties.json
+
+# JetBrains / others
+.idea/
+*.code-workspace
+
+# Swap / temp files
+*.swp
+*~
+*.tmp
+
+############################
+# OS-specific
+############################
+.DS_Store
+Thumbs.db
+
+############################
+# Logs
+############################
+*.log
+
+############################
+# Misc
+############################
+# Ignore core dumps
+core
+core.*
