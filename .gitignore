@@ -1,55 +1,57 @@
-############################
-# Build artifacts
-############################
+# --- Build Artifacts ---
+project5loader
 *.o
-*.obj
-*.exe
-*.out
 *.a
 *.so
 *.dll
+*.exe
+*.out
 
-# Final binary
-project4loader
+# --- Backup / Temp Files ---
+*~
+*.swp
+*.tmp
+*.bak
 
-# Build directories
-build/
-bin/
-dist/
-tmp/
+# --- Object Files from Other Machines ---
+*.lo
+*.la
 
-############################
-# Editor / IDE
-############################
-# VS Code internal files
+# --- Compiler / Tool Output ---
+*.dSYM/
+*.pdb
+*.ilk
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# --- Windows ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- VSCode ---
 .vscode/
-!.vscode/launch.json
-!.vscode/tasks.json
-!.vscode/c_cpp_properties.json
-
-# JetBrains / others
-.idea/
 *.code-workspace
 
-# Swap / temp files
-*.swp
-*~
-*.tmp
+# --- CLion / JetBrains ---
+.idea/
+cmake-build*/
 
-############################
-# OS-specific
-############################
-.DS_Store
-Thumbs.db
-
-############################
-# Logs
-############################
+# --- Logs ---
 *.log
 
-############################
-# Misc
-############################
-# Ignore core dumps
-core
-core.*
+# --- Generated Documentation (if any) ---
+docs/*.html
+docs/*.pdf
+
+# --- Slide Deck Autosaves ---
+docs/slides/~$*.pptx
+~$*.pptx
+
+# --- Test binaries (if using tests folder) ---
+tests/*.o
+tests/*.out
+tests/*.exe
