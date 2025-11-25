@@ -10,7 +10,7 @@
 *.dll
 
 # Final binary
-project5loader
+project4loader
 
 # Build directories
 build/

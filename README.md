@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-This project implements a **relocating loader** for the SIC architecture, with optional SICXE support, in ISO C17.
+This project implements a **relocating loader** for the SIC architecture, with optional SICXE support, in C.
 
 The loader:
 
@@ -14,5 +14,5 @@ The loader:
 Command-line interface:
 
 ```bash
-./project5loader <object_file> <reloc_addr_hex> <machine_type>
+./project4loader <object_file> <reloc_addr_hex> <machine_type>
 # machine_type ∈ { SIC, SICXE }
