@@ -14,5 +14,5 @@ The loader:
 Command-line interface:
 
 ```bash
-./project4loader <object_file> <reloc_addr_hex> <machine_type>
+./project5loader <object_file> <reloc_addr_hex> <machine_type>
 # machine_type ∈ { SIC, SICXE }
