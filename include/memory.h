@@ -5,6 +5,22 @@
 
 #define MEM_SIZE 32768  // 32K bytes for SIC
 
+/** 
+ * Simple simulated memory interface for the SIC/SICXE loader.
+ *
+ * This header declares:
+ *   - A fixed-size byte array representing main memory
+ *   - Functions to initialize memory
+ *   - Byte and word read/write operations
+ *
+ * The implementation in memory.c:
+ *   - Enforces bounds checking for memory accesses
+ *   - Implements SIC-style 3-byte word reads/writes
+ *
+ * This module is optional: the loader can either operate directly on
+ * ScoffTextRecord buffers or load them into this memory image first.
+ */
+
 void memInit(void);
 void memWriteByte(uint32_t addr, uint8_t value);
 uint8_t memReadByte(uint32_t addr);

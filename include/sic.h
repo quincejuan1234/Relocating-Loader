@@ -1,7 +1,16 @@
 #ifndef SIC_H
 #define SIC_H
 
-// Classic SIC architecture constants
+/**
+ * Architecture constants for the classic SIC machine.
+ *
+ * This header provides:
+ *   - Word size, address width, and maximum memory size for SIC
+ *   - Any SIC-specific constants needed by the relocation code
+ *
+ * Used primarily by relocSic.c and, optionally, memory.c.
+ */
+
 
 #define SIC_WORD_SIZE 3       // bytes
 #define SIC_ADDR_BITS 24      // 24-bit addressing

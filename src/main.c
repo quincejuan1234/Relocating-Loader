@@ -3,7 +3,20 @@
 #include "loader.h"
 #include "util.h"
 
-// Parses CLI args and invokes run_loader()
+/**
+ * Entry point for the SIC / SICXE relocating loader.
+ *
+ * Responsibilities:
+ *   - Parse and validate command-line arguments:
+ *       <object_file> <reloc_address_hex> <SIC|SICXE>
+ *   - Convert the relocation address from a hex string to an integer
+ *   - Map the machine type string to the MachineType enum
+ *   - Populate a LoaderConfig and call run_loader()
+ *
+ * This file should contain no relocation logic; it only wires CLI input
+ * into the loader API defined in loader.h.
+ */
+
 
 int main(int argc, char *argv[]) {
     if (argc != 4) {

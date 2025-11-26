@@ -1,15 +1,21 @@
 #ifndef SCOFF_H
 #define SCOFF_H
 
-/**
- * SCOFF record types for SIC and SIC/XE object files.
- * 
- * This module is responsible for defining the structures used for:
- * - Header record (H)
- * - Text record (T)
- * - Modification record (M)
- * - End record (E)
-*/
+
+/*
+ * Definitions for the SCOFF-style object file format used by the SIC/SICXE loader.
+ *
+ * This header declares:
+ *   - Structs representing H (header), T (text), M (modification),
+ *     and E (end) records
+ *   - The ScoffFile aggregate structure that holds all parsed records
+ *   - The parsing API: scoff_parse_file() and scoff_free()
+ *
+ * The implementation in scoff_parser.c:
+ *   - Reads a textual SIC/SICXE object file line by line
+ *   - Parses each H/T/M/E record into the corresponding C structs
+ *   - Performs basic validation on lengths, addresses, and record ordering
+ */
 
 #include <stdint.h>
 
@@ -17,7 +23,7 @@ typedef struct {
     char program_name[7]; 
     uint32_t startAddress;
     uint32_t programLength;
-} headerRecord
+} headerRecord;
 
 typedef struct {
     uint32_t address;
@@ -43,7 +49,7 @@ typedef struct {
     modRecord *modRecords;
     size_t modCount;
 
-    EndRecord endRecord;
+    endRecord endRecord;
 } objFile;
 
 int parseFile(const char *path, objFile *out);

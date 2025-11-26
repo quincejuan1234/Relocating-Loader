@@ -5,6 +5,21 @@
 #include <ctype.h>
 #include <string.h>
 
+/** 
+ * Implementation of shared utility functions for the relocating loader.
+ *
+ * Typical responsibilities:
+ *   - Implement parse_hex_u32(), which converts a hex string into a
+ *     uint32_t (optionally handling an optional 0x/0X prefix)
+ *   - Implement fatal(), which prints an error message to stderr and
+ *     terminates the program with a non-zero exit code
+ *
+ * These helpers centralize common tasks so that main.c, loader.c,
+ * parser, and relocation code can remain clean and focused on their
+ * core logic.
+ */
+
+
 int parseHex (const char *s, uint32_t *out) {
     if (s == NULL || *s == '\0' || out == NULL) {
         return 0;
