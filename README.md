@@ -26,6 +26,7 @@ The loader accepts **three** command-line arguments:
 
 ```bash
 project5loader <object_file> <reloc_address_hex> <machine_type>
+```
 
 - `object_file` is read from disk.
 - `reloc_address_hex` is parsed as a hex integer and used as the new starting address.
