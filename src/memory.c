@@ -6,16 +6,16 @@
  *
  * Responsibilities:
  *   - Provide a fixed-size byte array representing SIC memory
- *   - Implement mem_init() to clear memory
- *   - Implement mem_write_byte() / mem_read_byte() with bounds checking
- *   - Implement mem_write_word() / mem_read_word() for 3-byte SIC words
+ *   - Implement memInit() to clear memory
+ *   - Implement memWriteByte() / memReadByte() with bounds checking
+ *   - Implement memWriteWord() / memReadWord() for 3-byte SIC words
  *
  * Optional design:
  *   - The loader and relocation modules may choose to load all text
  *     records into this memory image, apply modifications to memory,
  *     and then regenerate T records from memory for output.
  *   - Alternatively, the project can skip this abstraction and
- *     operate directly on ScoffTextRecord buffers.
+ *     operate directly on textRecord buffers.
  */
 
 static uint8_t memory[MEM_SIZE];

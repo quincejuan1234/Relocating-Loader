@@ -8,10 +8,10 @@
  * Interface for relocation of classic SIC object programs.
  *
  * This header declares:
- *   - relocate_sic(), which applies a relocation factor to a ScoffFile
+ *   - relocateSic(), which applies a relocation factor to a objFile
  *     containing SIC object code
  *
- * The implementation in reloc_sic.c:
+ * The implementation in relocSic.c:
  *   - Walks modification records
  *   - Adjusts addresses/words according to the relocation address
  *   - Ensures results respect SIC 24-bit addressing constraints

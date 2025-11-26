@@ -9,7 +9,7 @@
  * Implementation of shared utility functions for the relocating loader.
  *
  * Typical responsibilities:
- *   - Implement parse_hex_u32(), which converts a hex string into a
+ *   - Implement parseHex(), which converts a hex string into a
  *     uint32_t (optionally handling an optional 0x/0X prefix)
  *   - Implement fatal(), which prints an error message to stderr and
  *     terminates the program with a non-zero exit code

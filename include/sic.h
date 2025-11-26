@@ -8,7 +8,7 @@
  *   - Word size, address width, and maximum memory size for SIC
  *   - Any SIC-specific constants needed by the relocation code
  *
- * Used primarily by relocSic.c and, optionally, memory.c.
+ * Used primarily by relocSic.c and memory.c.
  */
 
 

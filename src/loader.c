@@ -1,23 +1,23 @@
 #include "loader.h"
-#include "scoff.h"
-#include "reloc_sic.h"
-#include "reloc_sicxe.h"
+#include "objFile.h"
+#include "relocSic.h"
+#include "relocSicXE.h"
 #include <stdio.h>
 
 /** 
  * High-level control logic for the SIC / SICXE relocating loader.
  *
  * Responsibilities:
- *   - Implement run_loader(), the main API exposed by loader.h
- *   - Call scoff_parse_file() to read the input object file into a ScoffFile
+ *   - Implement runLoader(), the main function exposed by loader.h
+ *   - Call parseFile() to read the input object file into a objFile
  *   - Based on the MachineType (SIC or SICXE), call the appropriate
- *     relocation backend (relocate_sic() or relocate_sicxe())
+ *     relocation backend (relocateSic() or relocateSicXE())
  *   - After relocation, emit the relocated T (Text) and E (End) records
- *     to stdout in the expected SCOFF-like format
- *   - Clean up any allocated resources (via scoff_free())
+ *     to stdout in the expected object file format
+ *   - Clean up any allocated resources (via objFree())
  *
- * This module is the orchestrator; it does not implement the detailed
- * parsing or relocation algorithms itself.
+ * This module is in charge of calling the other functions of the loader
+ * it does not implement the detailed parsing or relocation algorithms itself.
  */
 
 

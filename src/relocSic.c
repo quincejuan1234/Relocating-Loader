@@ -4,9 +4,9 @@
  * Relocation logic for classic SIC object programs.
  *
  * Responsibilities:
- *   - Implement relocate_sic(), which:
- *       * Receives a parsed ScoffFile and a relocation address
- *       * Computes the relocation factor (new_start - original_start)
+ *   - Implement relocateSic(), which:
+ *       * Receives a parsed objFile and a relocation address
+ *       * Computes the relocation factor (newStart - originalStart)
  *       * Walks all SIC modification records (M)
  *       * Reads the affected word(s) and adds the relocation factor
  *       * Ensures the relocated values fit within SIC 24-bit addresses

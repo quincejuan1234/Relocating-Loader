@@ -1,17 +1,16 @@
-#ifndef SCOFF_H
-#define SCOFF_H
+#ifndef OBJFILE_H
+#define OBJFILE_H
 
 
 /*
- * Definitions for the SCOFF-style object file format used by the SIC/SICXE loader.
+ * Definitions for the object file format used by the SIC/SICXE loader.
  *
  * This header declares:
- *   - Structs representing H (header), T (text), M (modification),
- *     and E (end) records
- *   - The ScoffFile aggregate structure that holds all parsed records
- *   - The parsing API: scoff_parse_file() and scoff_free()
+ *   - Structs representing H (header), T (text), M (modification), and E (end) records
+ *   - The objFile aggregate structure that holds all records
+ *   - The parsing functions: parseFile() and objFree()
  *
- * The implementation in scoff_parser.c:
+ * The implementation in objParser.c:
  *   - Reads a textual SIC/SICXE object file line by line
  *   - Parses each H/T/M/E record into the corresponding C structs
  *   - Performs basic validation on lengths, addresses, and record ordering
@@ -42,17 +41,15 @@ typedef struct {
 } endRecord;
 
 typedef struct {
-    header header;
+    headerRecord header;
     textRecord *textRecords;
     size_t textCount;
-
     modRecord *modRecords;
     size_t modCount;
-
     endRecord endRecord;
 } objFile;
 
-int parseFile(const char *path, objFile *out);
+int objParseFile(const char *path, objFile *out);
 void objFree(objFile *file);
 
 #endif

@@ -2,19 +2,20 @@
 #define LOADER_H
 
 #include <stdint.h>
-#include "scoff.h"
+#include "objFile.h"
 
 /*
  * High-level interface for the SIC / SICXE relocating loader.
  *
  * This header defines:
  *   - The MachineType enum (SIC vs SICXE)
- *   - The LoaderConfig struct, which bundles command-line configuration
- *   - The run_loader() API, which drives the whole loading/relocation pipeline
+ *   - The LoaderConfig struct, which contains the command-line configurations
+ *   - The runLoader() API, which drives the whole loading/relocation pipeline
  *
  * The implementation in loader.c:
- *   - Parses a ScoffFile (via scoff_parser.c)
- *   - Invokes the appropriate relocation backend (reloc_sic.c or reloc_sicxe.c)
+ *   - Parses a objFile using objParser.c
+ *   - Invokes the appropriate relocation backend funcitons relocSic.c or 
+ *     relocSicxe.c depending on the case
  *   - Emits relocated T and E records to stdout
  */
 

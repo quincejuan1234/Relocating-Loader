@@ -16,9 +16,6 @@
  * The implementation in memory.c:
  *   - Enforces bounds checking for memory accesses
  *   - Implements SIC-style 3-byte word reads/writes
- *
- * This module is optional: the loader can either operate directly on
- * ScoffTextRecord buffers or load them into this memory image first.
  */
 
 void memInit(void);

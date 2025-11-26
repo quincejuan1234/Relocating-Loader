@@ -8,7 +8,7 @@
  *   - Basic enums and constants for SIC/XE instruction formats (1, 2, 3, 4)
  *   - A place to add SIC/XE-specific flags or addressing-mode helpers
  *
- * Used primarily by reloc_sicxe.c to interpret and update relocated addresses
+ * Used primarily by relocSicXE.c to interpret and update relocated addresses
  * in SIC/XE object code.
  */
 

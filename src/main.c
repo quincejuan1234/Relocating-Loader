@@ -11,10 +11,9 @@
  *       <object_file> <reloc_address_hex> <SIC|SICXE>
  *   - Convert the relocation address from a hex string to an integer
  *   - Map the machine type string to the MachineType enum
- *   - Populate a LoaderConfig and call run_loader()
+ *   - Populate a LoaderConfig and call runLoader()
  *
- * This file should contain no relocation logic; it only wires CLI input
- * into the loader API defined in loader.h.
+ * This file processes the console input into the loader defined in loader.h.
  */
 
 
@@ -25,17 +24,19 @@ int main(int argc, char *argv[]) {
     }
 
     LoaderConfig config;
-    config.file_path = argv[1];
+    config.filePath = argv[1];
 
-    if (!parseHex (argv[2], &config.relocation_address)) {
+    if (!parseHex (argv[2], &config.relocationAddress)) {
         fatal("Invalid hex relocation address.");
     }
 
     if (strcmp(argv[3], "SIC") == 0) {
-        config.machine_type = MACHINE_SIC;
-    } else if (strcmp(argv[3], "SICXE") == 0) {
-        config.machine_type = MACHINE_SICXE;
-    } else {
+        config.machineType = MACHINE_SIC;
+    } 
+    else if (strcmp(argv[3], "SICXE") == 0) {
+        config.machineType = MACHINE_SICXE;
+    } 
+    else {
         fatal("Invalid machine type. Use SIC or SICXE.");
     }
 
