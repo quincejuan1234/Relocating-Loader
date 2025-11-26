@@ -24,6 +24,7 @@ The loader accepts **three** command-line arguments:
 
 ### Usage
 
+```bash
 project5loader <object_file> <reloc_address_hex> <machine_type>
 
 - `object_file` is read from disk.
@@ -56,7 +57,7 @@ The program writes **only** the relocated T and E records to standard output, as
 
 A C compiler is required:
 
-- **Linux:** gcc, clang, or similar.
+- **Linux:** gcc, clang, xlc, or similar.
 - **Windows:** gcc (MinGW/MSYS), clang, or MSVC (with small Makefile tweaks if needed).
 - **z/OS USS:** c89, xlc, or equivalent.
 
@@ -67,18 +68,24 @@ Also required: **make**.
 ## Building
 
 From the project root directory:
+
+```bash
 make
+```
 
 This will produce an executable named: 
+
+```bash
 project5loader
+```
 
-Additional build options: 
+Additional build options:
+
+Clean:
+
+```bash
 make clean # removes object files and the executable
-
-If using a platform where the compiler name differs:
-make CC=clang
-make CC=c89
-
+```
 
 ---
 
@@ -86,14 +93,18 @@ make CC=c89
 
 Suggested directory structure:
 
+```text
 project5loader/
 ├── Makefile
 ├── README.md
 ├── docs/
 │   └── slides/
-│       └── project5loader_slides.pptx
+│       └── project5loaderSlides.pptx
 ├── include/
 │   ├── loader.h
+│   ├── memory.h
+│   ├── relocSic.h
+│   ├── relocSicXE.h
 │   ├── scoff.h
 │   ├── sic.h
 │   ├── sicxe.h
@@ -101,12 +112,13 @@ project5loader/
 ├── src/
 │   ├── main.c
 │   ├── loader.c
-│   ├── scoff_parser.c
-│   ├── reloc_sic.c
-│   ├── reloc_sicxe.c
+│   ├── scoffParser.c
+│   ├── relocSic.c
+│   ├── relocSicXE.c
 │   ├── memory.c
 │   └── util.c
 └── tests/
+```
 
 ---
 
@@ -148,8 +160,6 @@ Implements relocation logic for **SIC/XE**:
 - Applies relocation factor per modification records.
 
 ### `src/memory.c`
-
-(Optional)
 
 - Models a memory image if you choose to load the program into a byte array and then re-emit T records.
 - Provides helper functions (write word, read word, etc.).
@@ -261,11 +271,14 @@ Example simple test approach:
 
 ## How to Run
 
+```bash
 make
 ./project5loader <object_file> <reloc_address_hex> <SIC|SICXE>
+```
 
 
 ### Example
 
+```bash
 ./project5loader examples/example.obj 2000 SIC
-The relocated T and E records will be printed to standard output.
+```
