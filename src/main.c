@@ -8,7 +8,7 @@
  *
  * Responsibilities:
  *   - Parse and validate command-line arguments:
- *       <object_file> <reloc_address_hex> <SIC|SICXE>
+ *       <objectFile> <relocAddressHex> <SIC|SICXE>
  *   - Convert the relocation address from a hex string to an integer
  *   - Map the machine type string to the MachineType enum
  *   - Populate a LoaderConfig and call runLoader()
@@ -19,7 +19,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 4) {
-        printf("ERROR: Usage: %s <object_file> <reloc_address_hex> <SIC|SICXE>\n", argv[0]);
+        printf("ERROR: Usage: %s <objectFile> <relocAddressHex> <SIC|SICXE>\n", argv[0]);
         return 1;
     }
 

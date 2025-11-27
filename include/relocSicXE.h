@@ -1,7 +1,7 @@
 #ifndef RELOC_SICXE_H
 #define RELOC_SICXE_H
 
-#include "scoff.h"
+#include "objFile.h"
 #include <stdint.h>
 
 /**

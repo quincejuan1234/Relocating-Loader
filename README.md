@@ -6,11 +6,11 @@
 
 The program:
 
-- Reads a SIC/SICXE object file (in SCOFF format as used in this course).
+- Reads a SIC/SICXE object file in SCOFF format.
 - Relocates the program to a new starting address.
 - Outputs the relocated T (Text) and E (End) records to `stdout`.
 
-This project is designed for a course in systems and assembly programming and is implemented in standard C with a portable build system (Makefile).
+This project is designed for a course in systems programming and is implemented in standard C with a portable build system (Makefile).
 
 ---
 
@@ -18,19 +18,19 @@ This project is designed for a course in systems and assembly programming and is
 
 The loader accepts **three** command-line arguments:
 
-- **object_file** – path to a SIC/SICXE object file.
-- **reloc_address_hex** – relocation address in hexadecimal (no `0x` required).
-- **machine_type** – target machine type: `SIC` or `SICXE`.
+- **objectFile** – path to a SIC/SICXE object file.
+- **relocAddressHex** – relocation address in hexadecimal.
+- **machineType** – target machine type: `SIC` or `SICXE`.
 
 ### Usage
 
 ```bash
-project5loader <object_file> <reloc_address_hex> <machine_type>
+project5loader <objectFile> <relocAddressHex> <machineType>
 ```
 
-- `object_file` is read from disk.
-- `reloc_address_hex` is parsed as a hex integer and used as the new starting address.
-- `machine_type` selects the relocation rules:
+- `objectFile` is read from disk.
+- `relocAddressHex` is parsed as a hex integer and used as the new starting address.
+- `machineType` selects the relocation rules:
   - `SIC` → classic SIC (24-bit, format 3 only, absolute addressing + X bit).
   - `SICXE` → SIC/XE (formats 1/2/3/4, extended addressing, etc., depending on project scope).
 
@@ -106,14 +106,14 @@ project5loader/
 │   ├── memory.h
 │   ├── relocSic.h
 │   ├── relocSicXE.h
-│   ├── scoff.h
+│   ├── objFile.h
 │   ├── sic.h
 │   ├── sicxe.h
 │   └── util.h
 ├── src/
 │   ├── main.c
 │   ├── loader.c
-│   ├── scoffParser.c
+│   ├── objFileParser.c
 │   ├── relocSic.c
 │   ├── relocSicXE.c
 │   ├── memory.c
@@ -140,20 +140,20 @@ High-level pipeline:
 2. Apply relocation using the appropriate backend (SIC or SICXE).
 3. Emit relocated T and E records to `stdout`.
 
-### `src/scoff_parser.c`
+### `src/objFileParser.c`
 
 - Reads H/T/M/E records.
-- Builds internal C structures (e.g., `ScoffHeader`, `ScoffTextRecord`, `ScoffModRecord`, `ScoffEnd`).
+- Builds internal C structures (e.g., `headerRecord`, `textRecord`, `modRecord`, `endRecord`).
 - Performs basic consistency checks (record sizes, addresses, etc.).
 
-### `src/reloc_sic.c`
+### `src/relocSic.c`
 
 Implements relocation logic for **SIC**:
 
 - Applies relocation factor to addresses referenced in modification records.
 - Ensures addresses remain within SIC’s 24-bit limits as appropriate.
 
-### `src/reloc_sicxe.c`
+### `src/relocSicXES.c`
 
 Implements relocation logic for **SIC/XE**:
 
@@ -175,19 +175,12 @@ Implements relocation logic for **SIC/XE**:
 
 Defines public interfaces and core structures:
 
-- SCOFF records.
+- object file records.
 - Loader configuration struct.
 - Relocation interfaces.
 - Utility function prototypes.
 
-### `docs/design.md`
-
-- Describes SCOFF parsing.
-- Relocation algorithm details.
-- Design choices and trade-offs.
-- Project challenges and solutions.
-
-### `docs/slides/project5loader_slides.pptx`
+### `docs/slides/project5loaderSlides.pptx`
 
 - Presentation summarizing:
   - Loader architecture.
@@ -218,7 +211,7 @@ Contains:
 - Relocation address (integer).
 - Machine type (`SIC` or `SICXE` enum).
 
-#### `struct ScoffFile`
+#### `struct objFile`
 
 Aggregates:
 
@@ -235,7 +228,7 @@ Aggregates:
    - Extract program length `len`.
 
 2. **Compute relocation factor:**
-   - `R = new_start - start`
+   - `R = newStart - start`
 
 3. **Parse T records:**
    - Load addresses and byte contents into memory or internal structures.
@@ -251,7 +244,7 @@ Aggregates:
    - T records reflect new addresses and updated contents.
    - E record’s starting address is set to the relocated start.
 
-6. **Print relocated T and E records to `stdout`** in correct SCOFF format.
+6. **Print relocated T and E records to `stdout`** in correct object file format.
 
 ---
 
@@ -274,7 +267,7 @@ Example simple test approach:
 
 ```bash
 make
-./project5loader <object_file> <reloc_address_hex> <SIC|SICXE>
+./project5loader <objectFile> <relocAddressHex> <SIC|SICXE>
 ```
 
 
