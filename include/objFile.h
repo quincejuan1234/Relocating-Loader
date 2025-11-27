@@ -17,9 +17,10 @@
  */
 
 #include <stdint.h>
+#define MAX_T_BYTES 32      // Max T-record length
 
 typedef struct {
-    char program_name[7]; 
+    char progName[7]; 
     uint32_t startAddress;
     uint32_t programLength;
 } headerRecord;
@@ -27,7 +28,7 @@ typedef struct {
 typedef struct {
     uint32_t address;
     uint32_t length;
-    uint8_t bytes[32];      // Max T-record length = 32 bytes
+    uint8_t bytes[MAX_T_BYTES];
 } textRecord;
 
 typedef struct {
