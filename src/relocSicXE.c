@@ -1,4 +1,4 @@
-#include "reloc_sicxe.h"
+#include "relocSicXE.h"
 
 /** 
  * Relocation logic for SIC/XE object programs.

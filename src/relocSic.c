@@ -1,4 +1,4 @@
-#include "reloc_sic.h"
+#include "relocSic.h"
 
 /**
  * Relocation logic for classic SIC object programs.
