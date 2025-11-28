@@ -8,10 +8,10 @@
 /** 
  * Implementation of shared utility functions for the relocating loader.
  *
- * Typical responsibilities:
+ * This file implements:
  *   - Implement parseHex(), which converts a hex string into a
  *     uint32_t (optionally handling an optional 0x/0X prefix)
- *   - Implement fatal(), which prints an error message to stderr and
+ *   - Implement fatal(), which prints an error message and
  *     terminates the program with a non-zero exit code
  *
  * These helpers centralize common tasks so that main.c, loader.c,

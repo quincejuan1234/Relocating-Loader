@@ -4,7 +4,7 @@
 /** 
  * Simple simulated memory implementation for the relocating loader.
  *
- * Responsibilities:
+ * This file implements:
  *   - Provide a fixed-size byte array representing SIC memory
  *   - Implement memInit() to clear memory
  *   - Implement memWriteByte() / memReadByte() with bounds checking

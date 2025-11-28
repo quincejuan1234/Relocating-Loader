@@ -6,7 +6,7 @@
 /**
  * Entry point for the SIC / SICXE relocating loader.
  *
- * Responsibilities:
+ * This file implements:
  *   - Parse and validate command-line arguments:
  *       <objectFile> <relocAddressHex> <SIC|SICXE>
  *   - Convert the relocation address from a hex string to an integer

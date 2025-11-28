@@ -7,17 +7,16 @@
 /** 
  * High-level control logic for the SIC / SICXE relocating loader.
  *
- * Responsibilities:
+ * This file implements:
  *   - Implement runLoader(), the main function exposed by loader.h
- *   - Call parseFile() to read the input object file into a objFile
+ *   - Call objParseFile() to read the input object file into a objFile
  *   - Based on the MachineType (SIC or SICXE), call the appropriate
  *     relocation backend (relocateSic() or relocateSicXE())
  *   - After relocation, emit the relocated T (Text) and E (End) records
  *     to stdout in the expected object file format
  *   - Clean up any allocated resources (via objFree())
  *
- * This module is in charge of calling the other functions of the loader
- * it does not implement the detailed parsing or relocation algorithms itself.
+ * This module is in charge of calling the other functions of the loader.
  */
 
 

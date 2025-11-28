@@ -1,24 +1,22 @@
 #include "objFile.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 
 /**
  * Implementation of the object file parser for SIC/SICXE.
  *
- * Responsibilities:
+ * This file implements:
  *   - Implement objParseFile(), which:
  *       * Opens the given object file
  *       * Reads each line and identifies its record type (H/T/M/E)
- *       * Parses fields into ScoffHeader, ScoffTextRecord,
+ *       * Parses fields into headerRecord, textRecord,
  *         ModRecord, and EndRecord
  *       * Stores all records in a objFile structure
  *       * Performs basic validation (record order, lengths, addresses)
  *   - Implement objFree(), which releases any dynamic memory
  *     allocated inside a objFile
  *
- * This module should not perform relocation; it only parses input into
- * an in-memory representation suitable for later processing.
+ * This file only parses input into an in-memory representation 
+ * suitable for later processing.
  */
 
 // Remove trailing '\n' and '\r' characters
@@ -30,9 +28,8 @@ static void trimEolChars(char *s)
     }
 }
 
-/* Parse exactly 'len' hex characters at p into a uint32_t.
- * Returns 1 on success, 0 on failure.
- */
+// Parse exactly 'len' hex characters at p into a uint32_t. Returns 1 on success, 0 on failure.
+
 static int parseFixedHex(const char *p, size_t len, uint32_t *out){
     char buf[16]; // plenty for up to 8 hex digits and '\0' 
     char *end;
@@ -64,7 +61,7 @@ int objParseFile(const char *path, objFile *out) {
     FILE *fp = NULL;
     char line[256]; //Line being read from the object code file
     textRecord *tRecords = NULL; // Array that holds the T records
-    modRecord  *mrecords = NULL; // Array that holds the M records
+    modRecord  *mRecords = NULL; // Array that holds the M records
     size_t tCapacity = 0, mCapacity = 0; // Capacity counters for the records arrays
     size_t tCount = 0, mCount = 0; // Number of parsed records
     int seenHRecord = 0; // flag indicating whether header record found
@@ -89,20 +86,20 @@ int objParseFile(const char *path, objFile *out) {
     int error = 0; // Flag for succesfull parsing process (Assume succeed until failure)
     int lineNum = 0; // Line number being read for the object file
 
-    while (fgets(line, sizeof(line), fp) != NULL){
+    while (!error && fgets(line, sizeof(line), fp) != NULL){
         lineNum++;
         trimEolChars(line);
 
         //Skip empty lines
-        int spaceLine = 0;
+        int spaceLine = 1;
         for (char *p = line; *p; ++p) {
             if (!isspace((unsigned char)*p)) {
-                spaceLine = 0;
+                spaceLine = 0;// found non-space char
                 break;
             }
         }
         if(spaceLine) {
-            continue;
+            continue;// Continue to next line
         }
 
         char recType = line[0];// Character with the record type of the line
@@ -131,7 +128,8 @@ int objParseFile(const char *path, objFile *out) {
             for (int i = 5; i >= 0; --i) {
                 if (sicProgName[i] == ' ') {
                     sicProgName[i] = '\0';
-                } else {
+                } 
+                else {
                     break;
                 }
             }
@@ -145,6 +143,9 @@ int objParseFile(const char *path, objFile *out) {
             // Fill header record in objfile struct
             memset(&out->header, 0, sizeof(out->header));
             strncpy(out->header.progName, sicProgName, sizeof(out->header.progName) - 1);
+            out->header.startAddress  = progStart;
+            out->header.programLength = headerLen;
+
             break;
         }
             
@@ -216,7 +217,7 @@ int objParseFile(const char *path, objFile *out) {
             textRecord *tr = &tRecords[tCount];
             memset(tr, 0, sizeof(*tr));
             tr->address = addr;
-            tr->length  = tLen;
+            tr->length = tLen;
 
             // Loop that Decodes hex string into bytes
             for (uint32_t i = 0; i < tLen; ++i) {
@@ -252,24 +253,171 @@ int objParseFile(const char *path, objFile *out) {
          
         // Read in modification record
         case 'M':{
+            if (!seenHRecord || seenERecord) {
+                // M before H or after E
+                error = 1;
+                break;
+            }
+
+            size_t len = strlen(line);
+            // Minimun size of M record: M + 6 addr + 2 len + 1 sign = 10 chars.
+            if (len < 10) {
+                error = 1;
+                break;
+            }
+
+            uint32_t mAddr = 0; // Address where the loader must apply the relocation
+            uint32_t nibbles  = 0; // length of the field to modify, in nibbles
+
+            // Checks that the address and the number of nibbles are in the correct format 
+            if (!parseFixedHex(line + 1, 6, &mAddr) || !parseFixedHex(line + 7, 2, &nibbles)) {
+                error = 1;
+                break;
+            }
+
+            // Check for correct characters (+ , -)
+            char sign = line[9];
+            if (sign != '+' && sign != '-') {
+                error = 1;
+                break;
+            }
+
+            // Verifies that the lengthNibbles should be > 0 
+            if (nibbles == 0 || nibbles > 0xFFU) {
+                error = 1;
+                break;
+            }
+
+            // Grow modification records array if needed 
+            if (mCount == mCapacity) {
+                if (mCapacity == 0){
+                   mCapacity = 8;
+                }
+                else{
+                    mCapacity *= 2;
+                }
+                modRecord *temp = (modRecord *)realloc(mRecords, mCapacity * sizeof(modRecord));
+                if (!temp) {
+                    error = 1;
+                    break;
+                }
+                mRecords = temp;
+            }
+
+            modRecord *mr = &mRecords[mCount];
+            memset(mr, 0, sizeof(*mr));
+            mr->address = mAddr;
+            mr->lengthNibbles = (uint8_t)nibbles;
+            mr->sign = sign;
+
+            // Check mod record address vs. program length
+            if (headerLen > 0) {
+                uint32_t headerEnd = progStart + headerLen;
+                if (mAddr < progStart || mAddr >= headerEnd) {
+                    // Modification outside program range
+                    error = 1;
+                    break;
+                }
+            }
+
+            mCount++;
             break;
         }
 
         // Read in end record
         case 'E':{
+            if (!seenHRecord || seenERecord) {
+                // E before H or multiple E records
+                error = 1;
+                break;
+            }
+
+            size_t lineLen = strlen(line);
+            // E record structure: E + 6 address = 7 chars
+            if (lineLen < 7) {
+                error = 1;
+                break;
+            }
+
+            uint32_t execAddr = 0;
+            if (!parseFixedHex(line + 1, 6, &execAddr)) {
+                error = 1;
+                break;
+            }
+
+            // Basic check: if headerLen > 0, entry point should be in range
+            if (headerLen > 0) {
+                uint32_t headerEnd = progStart + headerLen;
+                if (execAddr < progStart || execAddr >= headerEnd) {
+                    // Invalid program addresses
+                    error = 1;
+                    break;
+                }
+            }
+
+            out->endRecord.firstExecAddress = execAddr;
+            seenERecord = 1;
             break;
-        }    
+        }  
 
         default:
+            // Invalid record
+            error = 1;
             break;
+        }// end switch
+    }// end while
+    
+    // Error validation
+    if (!error){
+        // Check that the program has exactly one header and one end record
+        if (!seenHRecord || !seenERecord) {
+            error = 1;
         }
-        
     }
     
+    if (!error && tCount > 0 && headerLen > 0) {
+        // If text records are present and non-zero program length, check the overall range
+        uint32_t headerEnd = progStart + headerLen;
+        if (minTextAddr < progStart || maxTextAddr > headerEnd) {
+            error = 1;
+        }
+    }
+
+    if (error) {
+        // On failure, free the records arrays and reset out
+        free(tRecords);
+        free(mRecords);
+        memset(out, 0, sizeof(*out));
+        fclose(fp);
+        return -1;
+    }
+
+    // If no errors, build the output objFile
+    out->textRecords = tRecords;
+    out->textCount = tCount;
+    out->modRecords = mRecords;
+    out->modCount = mCount;
+
+    fclose(fp);
     return 0;
 }
 
 void objFree(objFile *file) {
+    if (!file) {
+        return;
+    }
+
+    // free records arrays
     free(file->textRecords);
     free(file->modRecords);
+
+    // Reset pointers and counts
+    file->textRecords = NULL;
+    file->modRecords  = NULL;
+    file->textCount   = 0;
+    file->modCount    = 0;
+
+    //clear header and endRecord
+    memset(&file->header,    0, sizeof(file->header));
+    memset(&file->endRecord, 0, sizeof(file->endRecord));
 }
