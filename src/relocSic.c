@@ -59,4 +59,4 @@ void relocateSic(objFile *obj, uint32_t reloc) {
 
         memWriteWord(m->address, val);
     }
-}
+} 
