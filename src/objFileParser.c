@@ -118,29 +118,40 @@ int objParseFile(const char *path, objFile *out) {
                 error = 1;
                 break;
             }
-            size_t fieldLen = strlen(fields);
-            // 6 name + 6 start + 6 length = 18 chars min
-            if (fieldLen < 18) {
+            // Some assemblers pad the program name to 6 chars with spaces,
+            // while others emit a shorter name followed by a single space
+            // before the start and length fields. Parse the name up to the
+            // next whitespace (max 6 chars) and then read the two required
+            // 6-digit hex fields with optional spacing in between.
+
+            const char *p = fields;
+            char sicProgName[7];
+            size_t nameLen = 0;
+
+            while (*p && !isspace((unsigned char)*p) && nameLen < sizeof(sicProgName) - 1) {
+                sicProgName[nameLen++] = *p++;
+            }
+            sicProgName[nameLen] = '\0';
+
+            // Skip whitespace between name and start address
+            while (isspace((unsigned char)*p)) {
+                ++p;
+            }
+
+            // Need at least 6 hex chars for the start address
+            if (strlen(p) < 6 || !parseFixedHex(p, 6, &progStart)) {
                 error = 1;
                 break;
             }
+            p += 6;
 
-            // Read program name (cols 2-7)
-            char sicProgName[7];
-            memcpy(sicProgName, fields, 6);
-            sicProgName[6] = '\0';
-
-            // Trim any whitespace inside the program name
-            for (int i = 5; i >= 0; --i) {
-                if (sicProgName[i] == ' ') {
-                    sicProgName[i] = '\0';
-                } 
-                else {
-                    break;
-                }
+            // Skip whitespace between start address and program length
+            while (isspace((unsigned char)*p)) {
+                ++p;
             }
 
-            if (!parseFixedHex(fields + 6, 6, &progStart) || !parseFixedHex(fields + 12, 6, &headerLen)) {
+            // Need at least 6 hex chars for the program length
+            if (strlen(p) < 6 || !parseFixedHex(p, 6, &headerLen)) {
                 error = 1;
                 break;
             }
