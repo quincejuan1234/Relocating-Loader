@@ -19,6 +19,17 @@
  * This module is in charge of calling the other functions of the loader.
  */
 
+static void printRelocatedRecords(const objFile *obj){
+    for(size_t i = 0; i < obj->textCount; i++){
+        const textRecord *t = &obj->textRecords[i];
+
+        printf("T%06X%02X", (unsigned int)t->address), (unsigned int)t->length));
+        for(size_t j = 0; j < t->length; j++){
+            printf("%02X", (unsigned int)t->bytes[j]));        
+        }//Iterate through the object code bytes 
+        printf("\n");
+    }//Iterate through the Text records
+}
 
 int runLoader(const LoaderConfig *config) {
     objFile obj = {0};
@@ -34,7 +45,7 @@ int runLoader(const LoaderConfig *config) {
     }
 
     // TODO: print relocated T and E records
-
+    printRelocatedRecords(&obj);
     objFree(&obj);
     return 0;
 }
