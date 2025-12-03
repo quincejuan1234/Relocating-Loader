@@ -2,6 +2,7 @@
 #include "objFile.h"
 #include "relocSic.h"
 #include "relocSicXE.h"
+#include "util.h"
 #include <stdio.h>
 
 /** 
@@ -23,9 +24,9 @@ static void printRelocatedRecords(const objFile *obj){
     for(size_t i = 0; i < obj->textCount; i++){
         const textRecord *t = &obj->textRecords[i];
 
-        printf("T%06X%02X", (unsigned int)t->address), ((unsigned int)t->length);
+        printf("T%06X%02X", ((unsigned int)t->address), ((unsigned int)t->length));
         for(size_t j = 0; j < t->length; j++){
-            printf("%02X", (unsigned int)t->bytes[j]);        
+            printf("%02X", ((unsigned int)t->bytes[j]));        
         }//Iterate through the object code bytes 
         printf("\n");
     }//Iterate through the Text records
@@ -34,7 +35,7 @@ static void printRelocatedRecords(const objFile *obj){
 int runLoader(const LoaderConfig *config) {
     objFile obj = {0};
 
-    if (parseFile(config->filePath, &obj) != 0) {
+    if (objParseFile(config->filePath, &obj) != 0) {
         fatal("Failed to parse SCOFF file.");
     }
 

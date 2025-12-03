@@ -40,5 +40,5 @@ int main(int argc, char *argv[]) {
         fatal("Invalid machine type. Use SIC or SICXE.");
     }
 
-    return run_loader(&config);
+    return runLoader(&config);
 }
