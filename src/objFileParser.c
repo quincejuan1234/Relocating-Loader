@@ -103,6 +103,12 @@ int objParseFile(const char *path, objFile *out) {
         }
 
         char recType = line[0];// Character with the record type of the line
+        const char *fields = line + 1;
+        // Skip any spaces immediately after the record type. Some object files
+        // include a separating space.
+        while (*fields == ' ' || *fields == '\t') {
+            ++fields;
+        }
         switch (recType)
         {
         // Read in header record
@@ -112,16 +118,16 @@ int objParseFile(const char *path, objFile *out) {
                 error = 1;
                 break;
             }
-            size_t lineLen = strlen(line);
-            // H + 6 name + 6 start + 6 length = 19 chars min
-            if (lineLen < 19) {
+            size_t fieldLen = strlen(fields);
+            // 6 name + 6 start + 6 length = 18 chars min
+            if (fieldLen < 18) {
                 error = 1;
                 break;
             }
 
             // Read program name (cols 2-7)
             char sicProgName[7];
-            memcpy(sicProgName, line + 1, 6);
+            memcpy(sicProgName, fields, 6);
             sicProgName[6] = '\0';
 
             // Trim any whitespace inside the program name
@@ -134,7 +140,7 @@ int objParseFile(const char *path, objFile *out) {
                 }
             }
 
-            if (!parseFixedHex(line + 7, 6, &progStart) || !parseFixedHex(line + 13, 6, &headerLen)) {
+            if (!parseFixedHex(fields + 6, 6, &progStart) || !parseFixedHex(fields + 12, 6, &headerLen)) {
                 error = 1;
                 break;
             }
@@ -157,9 +163,9 @@ int objParseFile(const char *path, objFile *out) {
                 break;
             }
 
-            size_t lineLen = strlen(line);
-            // Minimun size of T record: At least 'T' + 6 addr + 2 len = 9 chars 
-            if (lineLen < 9) {
+            size_t lineLen = strlen(fields);
+            // Minimun size of T record payload: 6 addr + 2 len = 8 chars
+            if (lineLen < 8) {
                 error = 1;
                 break;
             }
@@ -168,7 +174,7 @@ int objParseFile(const char *path, objFile *out) {
             uint32_t tLen = 0;
 
             // Cols 2–7: address (6 hex), 8–9: length (2 hex)
-            if (!parseFixedHex(line + 1, 6, &addr) || !parseFixedHex(line + 7, 2, &tLen)) {
+            if (!parseFixedHex(fields, 6, &addr) || !parseFixedHex(fields + 6, 2, &tLen)) {
                 error = 1;
                 break;
             }
@@ -179,7 +185,7 @@ int objParseFile(const char *path, objFile *out) {
                 break;
             }
 
-            const char *hexBytes = line + 9; // String with the hex bytes of the T record
+            const char *hexBytes = fields + 8; // String with the hex bytes of the T record
             size_t hexLen = strlen(hexBytes);// How many hex digits appear after the length field
             // Check if the length of the hex bytes is correct 
             if (hexLen != (size_t)tLen * 2U) {
@@ -259,9 +265,9 @@ int objParseFile(const char *path, objFile *out) {
                 break;
             }
 
-            size_t len = strlen(line);
-            // Minimun size of M record: M + 6 addr + 2 len + 1 sign = 10 chars.
-            if (len < 10) {
+            size_t len = strlen(fields);
+            // Minimun size of M record payload: 6 addr + 2 len + 1 sign = 9 chars.
+            if (len < 9) {
                 error = 1;
                 break;
             }
@@ -270,13 +276,13 @@ int objParseFile(const char *path, objFile *out) {
             uint32_t nibbles  = 0; // length of the field to modify, in nibbles
 
             // Checks that the address and the number of nibbles are in the correct format 
-            if (!parseFixedHex(line + 1, 6, &mAddr) || !parseFixedHex(line + 7, 2, &nibbles)) {
+            if (!parseFixedHex(fields, 6, &mAddr) || !parseFixedHex(fields + 6, 2, &nibbles)) {
                 error = 1;
                 break;
             }
 
             // Check for correct characters (+ , -)
-            char sign = line[9];
+            char sign = fields[8];
             if (sign != '+' && sign != '-') {
                 error = 1;
                 break;
@@ -332,15 +338,15 @@ int objParseFile(const char *path, objFile *out) {
                 break;
             }
 
-            size_t lineLen = strlen(line);
-            // E record structure: E + 6 address = 7 chars
-            if (lineLen < 7) {
+            size_t lineLen = strlen(fields);
+            // E record payload: 6 address chars
+            if (lineLen < 6) {
                 error = 1;
                 break;
             }
 
             uint32_t execAddr = 0;
-            if (!parseFixedHex(line + 1, 6, &execAddr)) {
+            if (!parseFixedHex(fields, 6, &execAddr)) {
                 error = 1;
                 break;
             }
