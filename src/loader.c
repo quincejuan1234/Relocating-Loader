@@ -23,9 +23,9 @@ static void printRelocatedRecords(const objFile *obj){
     for(size_t i = 0; i < obj->textCount; i++){
         const textRecord *t = &obj->textRecords[i];
 
-        printf("T%06X%02X", (unsigned int)t->address), (unsigned int)t->length));
+        printf("T%06X%02X", (unsigned int)t->address), ((unsigned int)t->length);
         for(size_t j = 0; j < t->length; j++){
-            printf("%02X", (unsigned int)t->bytes[j]));        
+            printf("%02X", (unsigned int)t->bytes[j]);        
         }//Iterate through the object code bytes 
         printf("\n");
     }//Iterate through the Text records
@@ -43,8 +43,7 @@ int runLoader(const LoaderConfig *config) {
     } else {
         relocateSicXE(&obj, config->relocationAddress);
     }
-
-    // TODO: print relocated T and E records
+    
     printRelocatedRecords(&obj);
     objFree(&obj);
     return 0;
