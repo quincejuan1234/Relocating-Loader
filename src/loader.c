@@ -24,6 +24,7 @@ static void printRelocatedRecords(const objFile *obj){
     for(size_t i = 0; i < obj->textCount; i++){
         const textRecord *t = &obj->textRecords[i];
 
+        // Print Text record header
         printf("T%06X%02X", ((unsigned int)t->address), ((unsigned int)t->length));
         for(size_t j = 0; j < t->length; j++){
             printf("%02X", ((unsigned int)t->bytes[j]));
@@ -31,6 +32,7 @@ static void printRelocatedRecords(const objFile *obj){
         printf("\n");
     }//Iterate through the Text records
 
+    // Print End record
     printf("E%06X\n", (unsigned int)obj->endRecord.firstExecAddress);
 }
 
