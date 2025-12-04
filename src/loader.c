@@ -26,10 +26,12 @@ static void printRelocatedRecords(const objFile *obj){
 
         printf("T%06X%02X", ((unsigned int)t->address), ((unsigned int)t->length));
         for(size_t j = 0; j < t->length; j++){
-            printf("%02X", ((unsigned int)t->bytes[j]));        
-        }//Iterate through the object code bytes 
+            printf("%02X", ((unsigned int)t->bytes[j]));
+        }//Iterate through the object code bytes
         printf("\n");
     }//Iterate through the Text records
+
+    printf("E%06X\n", (unsigned int)obj->endRecord.firstExecAddress);
 }
 
 int runLoader(const LoaderConfig *config) {
