@@ -18,3 +18,4 @@ int parseHex (const char *s, uint32_t *out);
 void fatal(const char *msg);
 
 #endif
+

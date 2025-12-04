@@ -25,3 +25,4 @@ void memWriteWord(uint32_t addr, uint32_t value); // 3-byte SIC word
 uint32_t memReadWord(uint32_t addr);
 
 #endif
+

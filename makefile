@@ -1,31 +1,34 @@
+CC ?= gcc
+CFLAGS ?= -g -Wall -Wextra -Iinclude
+
 project5loader: main.o loader.o objFileParser.o relocSic.o relocSicXE.o memory.o util.o
-	xlc -q64 -o project5loader main.o loader.o objFileParser.o relocSic.o relocSicXE.o memory.o util.o
+	$(CC) -o $@ $^
 
 main.o: src/main.c include/loader.h include/memory.h include/relocSic.h \
-        include/relocSicXE.h include/objFile.h include/sic.h include/sicxe.h \
-        include/util.h
-	xlc -q64 -c -g -Iinclude src/main.c
+include/relocSicXE.h include/objFile.h include/sic.h include/sicxe.h \
+include/util.h
+	$(CC) $(CFLAGS) -c src/main.c
 
 loader.o: src/loader.c include/loader.h include/objFile.h include/memory.h \
-          include/relocSic.h include/relocSicXE.h include/util.h
-	xlc -q64 -c -g -Iinclude src/loader.c
+include/relocSic.h include/relocSicXE.h include/util.h
+	$(CC) $(CFLAGS) -c src/loader.c
 
 objFileParser.o: src/objFileParser.c include/objFile.h include/util.h
-	xlc -q64 -c -g -Iinclude src/objFileParser.c
+	$(CC) $(CFLAGS) -c src/objFileParser.c
 
 relocSic.o: src/relocSic.c include/relocSic.h include/objFile.h \
-            include/memory.h include/sic.h include/util.h
-	xlc -q64 -c -g -Iinclude src/relocSic.c
+include/memory.h include/sic.h include/util.h
+	$(CC) $(CFLAGS) -c src/relocSic.c
 
 relocSicXE.o: src/relocSicXE.c include/relocSicXE.h include/objFile.h \
-              include/memory.h include/sicxe.h include/util.h
-	xlc -q64 -c -g -Iinclude src/relocSicXE.c
+include/memory.h include/sicxe.h include/util.h
+	$(CC) $(CFLAGS) -c src/relocSicXE.c
 
 memory.o: src/memory.c include/memory.h include/util.h
-	xlc -q64 -c -g -Iinclude src/memory.c
+	$(CC) $(CFLAGS) -c src/memory.c
 
 util.o: src/util.c include/util.h
-	xlc -q64 -c -g -Iinclude src/util.c
+	$(CC) $(CFLAGS) -c src/util.c
 
 clean:
 	rm -f *.o
