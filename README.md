@@ -98,9 +98,6 @@ Suggested directory structure:
 project5loader/
 ├── Makefile
 ├── README.md
-├── docs/
-│   └── slides/
-│       └── project5loaderSlides.pptx
 ├── include/
 │   ├── loader.h
 │   ├── memory.h
@@ -118,7 +115,8 @@ project5loader/
 │   ├── relocSicXE.c
 │   ├── memory.c
 │   └── util.c
-└── tests/
+├── tests/ 
+└── Relocating Loader.pdf
 ```
 
 ---
